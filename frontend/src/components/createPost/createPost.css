@@ -1,0 +1,11 @@
+.create-post{
+    background-color: aquamarine;
+    width: 45vw;
+    /* position: absolute; */
+    z-index: 1;
+}
+.form-input{
+    width:100%;
+    display:none;
+    margin-bottom:30px;
+}
