@@ -1,9 +1,15 @@
 import React from "react";
+import { useSelector } from "react-redux";
+
 import Post from "../post/Post";
 import CreatePost from "../createPost/CreatePost";
 
-const Newsfeed = ({ id, isNewPost,userData, setUserData,setIsNewPost,feedPosts, setReload}) => {
+const Newsfeed = ({ id, isNewPost,setIsNewPost, setReload}) => {
+  const newsFeedPosts = useSelector(state=>state.allUsersPostReducer)
+  const userProfileData = useSelector(state=>state.loginUserDataReducer)
+  
   const LSUser = JSON.parse(localStorage.getItem("fbUser"));
+  
   return (
     <div>
       <div className="container bg-white justify-content-center my-3 p-3 border-style">
@@ -15,7 +21,7 @@ const Newsfeed = ({ id, isNewPost,userData, setUserData,setIsNewPost,feedPosts, 
             <input
               type="text"
               className="caption form-control bg-grey"
-              placeholder={"Whats on your mind, " + userData.fName + "?"}
+              placeholder={"Whats on your mind, " + userProfileData.fName + "?"}
               onClick={() => setIsNewPost(true)}
             />
           </div>
@@ -27,16 +33,13 @@ const Newsfeed = ({ id, isNewPost,userData, setUserData,setIsNewPost,feedPosts, 
       <div>
         {isNewPost && (
           <CreatePost
-            setUserData={setUserData}
-            userData={userData}
-            userId={id}
             isNewPost={isNewPost}
             setIsNewPost={setIsNewPost}
           />
         )}
       </div>
       <div
-        id={id}
+        id={userProfileData._id}
         className="container justify-content-center my-3 border-style"
         style={{
           height: "90vh",
@@ -45,12 +48,10 @@ const Newsfeed = ({ id, isNewPost,userData, setUserData,setIsNewPost,feedPosts, 
           background: "none",
         }}
       >
-        {feedPosts.length > 0 ? (
-          feedPosts.map((post) => {
+        {newsFeedPosts.map((post) => {
             return (
               <Post
                 key={post._id}
-                userData={userData}
                 setReload={setReload}
                 postId={post._id}
                 date={post.date}
@@ -59,10 +60,7 @@ const Newsfeed = ({ id, isNewPost,userData, setUserData,setIsNewPost,feedPosts, 
                 comments={post.comments}
               />
             );
-          })
-        ) : (
-          <div className="my-2 bg-white">nothing to show here</div>
-        )}
+          })}
       </div>
     </div>
   );

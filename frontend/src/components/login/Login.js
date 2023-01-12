@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import "./Login.css"
+import { useDispatch } from "react-redux";
 import axios from 'axios';
 import {Link, useNavigate } from "react-router-dom";
 
+import { addLoginUserData } from '../../features/loginUserDataSlice';
+
+import "./Login.css"
+
 const Login = ({setIsUserLoggedin,setUserData}) => {
+  const dispatch = useDispatch()
   let navigate =useNavigate();
 
   const[user,setUser]=useState({
@@ -22,7 +27,19 @@ const Login = ({setIsUserLoggedin,setUserData}) => {
       if(res.status===201){
         alert(res.data.message);
         localStorage.setItem("fbUser",JSON.stringify(res.data.user))
-        setUserData(res.data.user)
+        // console.log(res.data.user);
+        // setUserData(res.data.user)
+        dispatch(addLoginUserData(
+          res.data.user._id,
+          res.data.user.fName,
+          res.data.user.lName,
+          res.data.user.email,
+          res.data.user.date,
+          res.data.user.month,
+          res.data.user.year,
+          res.data.user.posts,
+          res.data.user.gender
+        ))
         setIsUserLoggedin(JSON.parse(localStorage.getItem("fbUser")?true:false))
         navigate("../", { replace: true })
       }else{

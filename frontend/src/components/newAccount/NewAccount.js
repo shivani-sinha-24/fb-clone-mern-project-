@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addLoginUserData } from "../../features/loginUserDataSlice";
 import "./NewAccount.css";
 import { Link, useNavigate } from "react-router-dom";
 import DateOfBirth from "../dateOfBirth/DateOfBirth";
 import axios from "axios";
 
-const NewAccount = ({setIsUserFound,setIsUserLoggedin,setUserData}) => {
+const NewAccount = ({setIsUserFound,setIsUserLoggedin}) => {
+  const dispatch = useDispatch()
   let navigate= useNavigate()
   const [user, setUser] = useState({
     fName: "",
@@ -25,7 +28,18 @@ const NewAccount = ({setIsUserFound,setIsUserLoggedin,setUserData}) => {
     axios.post("http://localhost:3009/register",user).then(res=>{
       alert(res.data.message);
       if(res.data.user){
-        setUserData(res.data.user)
+        // setUserData(res.data.user)
+        dispatch(addLoginUserData(
+          res.data.user._id,
+          res.data.user.fName,
+          res.data.user.lName,
+          res.data.user.email,
+          res.data.user.date,
+          res.data.user.month,
+          res.data.user.year,
+          res.data.user.posts,
+          res.data.user.gender
+        ))
         setIsUserFound(true);
         setIsUserLoggedin(true);
         navigate("../login", { replace: true })

@@ -1,12 +1,17 @@
 import React, { useState} from "react";
+import { useSelector } from "react-redux";
+
 import Post from "../post/Post";
 
 const Profile = ({ userData }) => {
+
+  const userProfileData = useSelector(state=>state.loginUserDataReducer)
+
   const [reload, setReload] = useState(false);
   return (
     <div>
       <div
-        id={userData._id}
+        id={userProfileData._id}
         className="container justify-content-center my-3 border-style"
         style={{
           height: "90vh",
@@ -15,7 +20,7 @@ const Profile = ({ userData }) => {
           background: "none",
         }}
       >
-        {userData?.posts?.map((post) => {
+        {userProfileData?.posts?.map((post) => {
           return (
             <Post
               key={post._id}

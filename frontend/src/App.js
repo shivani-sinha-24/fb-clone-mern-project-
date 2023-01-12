@@ -1,9 +1,12 @@
 import { useState, useEffect} from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import axios from 'axios';
 
-import "./App.css";
+import { addLoginUserData } from "./features/loginUserDataSlice";
+import { addAllUsersPosts,resetAllUsersPost } from "./features/allUsersPostSlice";
 
+import "./App.css";
 import Login from "./components/login/Login";
 import NewAccount from "./components/newAccount/NewAccount";
 import Homepage from "./components/homepage/Homepage";
@@ -13,24 +16,38 @@ import Friends from "./components/friends/Friends";
 import Newsfeed from "./components/newsfeed/Newsfeed";
 
 function App() {
+  const dispatch = useDispatch()
 
   const [userData, setUserData] = useState({});
   const [isUserFound, setIsUserFound] = useState(false);
   const [isUserLoggedin, setIsUserLoggedin] = useState(false);  
   const [isNewPost, setIsNewPost] = useState(false);
   const [reload, setReload] = useState(false);
-  const [feedPosts, setFeedPosts] = useState([]);
+  // const [feedPosts, setFeedPosts] = useState([]);
 
   const LSUser = JSON.parse(localStorage.getItem("fbUser"));
 
   useEffect(()=>{
     if(LSUser){axios.get(`http://localhost:3009/${LSUser?._id}`,LSUser?._id).then(res=>{
-      setUserData(res.data._doc)
+      // setUserData(res.data._doc)
       setIsUserLoggedin(true)
-    })
+
+      dispatch(addLoginUserData(res.data._doc._id,
+        res.data._doc.fName,
+        res.data._doc.lName,
+        res.data._doc.email,
+        res.data._doc.date,
+        res.data._doc.month,
+        res.data._doc.year,
+        res.data._doc.posts,
+        res.data._doc.gender))
+      })
 
       axios.get(`http://localhost:3009/users-posts/${userData._id}`).then((res) => {
-        setFeedPosts(res.data);
+        // setFeedPosts(res.data);
+        dispatch(resetAllUsersPost())
+        const data = res.data
+        data.map(post=> dispatch(addAllUsersPosts(post._id,post.userId,post.caption,post.image,post.date,post.likes,post.comments)))
       });
 
     }else{
@@ -85,8 +102,8 @@ function App() {
               isUserLoggedin={isUserLoggedin}
               isNewPost={isNewPost}
               setIsNewPost={setIsNewPost}
-              feedPosts={feedPosts}
-              setFeedPosts={setFeedPosts}
+              // feedPosts={feedPosts}
+              // setFeedPosts={setFeedPosts}
               reload={reload}
               setReload={setReload}
               id={userData?._id}/>}

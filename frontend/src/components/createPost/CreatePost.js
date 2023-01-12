@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+
 import "./createPost.css";
 import axios from 'axios';
 import moment from 'moment';
 
-const CreatePost = ({userData,setIsNewPost}) => {
+const CreatePost = ({setIsNewPost}) => {
+  const userProfileData = useSelector(state=>state.loginUserDataReducer)
+  console.log(userProfileData);
+
   const[post,setPost]=useState({
-    userId:userData._id,
+    userId:userProfileData._id,
     caption:"",
     image:"",
     date:moment().format('MMMM Do YYYY, h:mm:ss a')
@@ -78,7 +83,7 @@ const CreatePost = ({userData,setIsNewPost}) => {
           name="caption"
           id="caption"
           value={post.caption}
-          placeholder={"Whats on your mind, "+userData.fName+"?"}
+          placeholder={"Whats on your mind, "+userProfileData.fName+"?"}
           onChange={changeHandle}
         />
       </div>

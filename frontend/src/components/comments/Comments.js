@@ -1,12 +1,14 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
-const Comments = ({userData,cmnt,setReload,userId,postId}) => {
+const Comments = ({cmnt,setReload,postId}) => {
+  const userProfileData = useSelector(state=>state.loginUserDataReducer)
  
   const cmntDetail = {
-    userId:userData._id,
+    userId:userProfileData._id,
     cmnt,
-    userName:userData.fName+" "+userData.lName,
+    userName:userProfileData.fName+" "+userProfileData.lName,
     postId
   }
 
@@ -21,7 +23,7 @@ const Comments = ({userData,cmnt,setReload,userId,postId}) => {
       <div className="row bg-white">
               <div className="col-11 bg-white">
                 <div className="card m-2 bg-white"> 
-                  <h6 className="card-title my-0 bg-white" name={userData.fName+" "+userData.lName}>{userData.fName+" "+userData.lName}</h6>
+                  <h6 className="card-title my-0 bg-white" name={userProfileData.fName+" "+userProfileData.lName}>{userProfileData.fName+" "+userProfileData.lName}</h6>
                   <p  className="card-text bg-white" name={cmnt}>{cmnt}</p>
                 </div>
               </div>

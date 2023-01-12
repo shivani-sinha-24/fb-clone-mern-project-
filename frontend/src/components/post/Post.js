@@ -1,16 +1,19 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import "./Post.css" ;
 import Comments from "../comments/Comments";
 
-const Post = ({ caption,  image,  date,  postId,  setReload,  comments,  userData}) => {
+const Post = ({ caption,  image,  date,  postId,  setReload,  comments }) => {
+  const userProfileData = useSelector(state=>state.loginUserDataReducer)
+
   const [comntInput, setCmntTnput] = useState("");
   const [showCmnt, setShowCmnt] = useState(false);
   const[isPostLiked,setIsPostLikedd]= useState(false)
   const postdetail = {
-    userId:userData._id,
-    userName:userData.fName+" "+userData.lName,
+    userId:userProfileData._id,
+    userName:userProfileData.fName+" "+userProfileData.lName,
     postId,
     comntInput,
   };
@@ -90,7 +93,7 @@ const Post = ({ caption,  image,  date,  postId,  setReload,  comments,  userDat
         comments.length > 0 &&
         comments.map((comment,index) => {
           return (
-            <Comments cmnt={comment.cmnt} key={index} id={index} postId={postId}setReload={setReload} userData={userData}/>
+            <Comments cmnt={comment.cmnt} key={index} id={index} postId={postId}setReload={setReload} />
           );
         })}
         <form
